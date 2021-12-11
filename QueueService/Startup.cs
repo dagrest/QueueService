@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using QueueService.V1;
+using QueueService.V1.Models;
 
 namespace QueueService
 {
@@ -30,6 +32,11 @@ namespace QueueService
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
+
+            builder.RegisterType<QueueServiceApi>().As<IQueueServiceApi>().SingleInstance();
+            builder.RegisterType<Validation>().As<IValidation>().SingleInstance();
+            builder.RegisterType<InputData>().As<IInputData>().SingleInstance();
+            builder.RegisterType<DalInMemory>().As<IDal>().SingleInstance();
 
             AutofacContainer = builder.Build();
             return new AutofacServiceProvider(AutofacContainer);
